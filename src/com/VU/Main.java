@@ -2,24 +2,12 @@ package com.VU;
 
 import java.util.Arrays;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static com.VU.Constants.*;
 
 public class Main {
-    // colors
-    public static final String ANSI_RESET = "\u001B[0m";
-    public static final String ANSI_RED = "\u001B[31m";
-    public static final String ANSI_GREEN = "\u001B[32m";
-    public static final String ANSI_YELLOW = "\u001B[33m";
-    public static final String ANSI_CYAN = "\u001B[36m";
-
-    // commands
-    public static final String CMD_CHANGE_ERROR_PROB = "cep";
-    public static final String CMD_PROBABILITY = "prob";
-    public static final String CMD_INFO = "info";
-    public static final String CMD_HELP = "help";
-
-    // errors
-    public static final String ERROR_RANGE = ANSI_RED + "Error! Input probability must be in range [0 - 1]!" + ANSI_RESET;
-    public static final String ERROR_NO_ARGUMENTS_FOR_CEP = ANSI_RED + "Error! No arguments found for command \"cep\". Expected \"cep {float numberInRangeFrom0To1}\"." + ANSI_RESET;
 
 
     public static void commandNotFound(String inputStr) {
@@ -37,55 +25,88 @@ public class Main {
     public static void setErrorProbability(float newProbability) {
         if (newProbability >= 0 && newProbability <= 1) {
             errorProbability = newProbability;
-            System.out.println(ANSI_YELLOW + "Error probability was changed to: " + ANSI_GREEN + errorProbability + ANSI_RESET+ ".");
+            System.out.println(ANSI_YELLOW + "Error probability was changed to: " + ANSI_GREEN + errorProbability + ANSI_RESET + ".");
         }
     }
 
     public static float errorProbability = 0;
 
     public static void main(String[] args) {
-
-        System.out.println("Welcome to A15 encoder/decoder!");
+        printGreeting();
         Scanner scanner = new Scanner(System.in);
         String inputLine;
+        CodeString codeString = new CodeString();
         do {
-            System.out.print(">");
+            System.out.print(INPUT_PREFIX);
             inputLine = scanner.nextLine();
             String[] inputArgs = inputLine.split(" ");
             String command = inputArgs[0];
             String[] params = Arrays.copyOfRange(inputLine.split(" "), 1, inputArgs.length);
-            if (params.length > 1)
-                commandNotFound(inputLine);
-            else
-                switch (command.toLowerCase()) {
-                    case CMD_CHANGE_ERROR_PROB: {
-                        if (params.length == 0) {
-                            System.out.println(ERROR_NO_ARGUMENTS_FOR_CEP);
-                            break;
-                        }
-                        setErrorProbability(readProbability(params[0]));
+
+            switch (command.toLowerCase()) {
+                case CMD_CHANGE_ERROR_PROB: {
+                    if (params.length == 0) {
+                        System.out.println(ERROR_NO_ARGUMENTS_FOR_CEP);
                         break;
                     }
-                    case CMD_PROBABILITY: {
-                        printCurrentErrorProbability();
-                        break;
-                    }
-                    case CMD_INFO: {
-                        System.out.println("Program written by Vilnius University 4th year CS Bachelors student Povilas Tamošauskas, 2021.");
-                        break;
-                    }
-                    case CMD_HELP: {
-                        printHelp();
-                    }
-                    default: {
-                        commandNotFound(inputLine);
-                        break;
-                    }
-                    case "exit":
-                    case "quit": {
-                        break;
-                    }
+                    setErrorProbability(readProbability(params[0]));
+                    break;
                 }
+
+                case CMD_PROBABILITY: {
+                    printCurrentErrorProbability();
+                    break;
+                }
+                case CMD_INFO: {
+                    System.out.println("Program written by Vilnius University 4th year CS Bachelors student Povilas Tamošauskas, 2021.");
+                    break;
+                }
+                case CMD_HELP: {
+                    printHelp();
+                    break;
+                }
+                case CMD_ENCODE: {
+                    if (params.length == 0) {
+                        codeString.encode(codeString.getRawString());
+                    } else {
+                        System.out.println("Params length: " + params.length);
+                        if (countOccurences(inputLine, '"', 0) % 2 == 0) {
+                            Pattern p = Pattern.compile("\"([^\"]*)\"");
+                            Matcher m = p.matcher(inputLine);
+                            while (m.find()) {
+                                codeString.encode(m.group(1));
+                            }
+                        } else {
+                            System.out.println(ERROR_ENCODING);
+                        }
+                    }
+                    break;
+                }
+                case CMD_DECODE: {
+                    codeString.decode();
+                    break;
+                }
+                case CMD_RESULT: {
+                    codeString.printCurrentState();
+                    break;
+                }
+                case CMD_INPUT: {
+                    Pattern p = Pattern.compile("\"([^\"]*)\"");
+                    Matcher m = p.matcher(inputLine);
+                    while (m.find()) {
+                        codeString.setRawString(m.group(1));
+                    }
+                    break;
+                }
+                default: {
+                    commandNotFound(inputLine);
+                    break;
+                }
+                case CMD_EXIT:
+                case CMD_QUIT: {
+                    break;
+                }
+            }
 
         }
         while (!inputLine.equalsIgnoreCase("exit") && !inputLine.equalsIgnoreCase("quit"));
@@ -103,8 +124,33 @@ public class Main {
 
     public static void printHelp() {
         System.out.println("Commands: ");
-        System.out.println(ANSI_CYAN + "cep" + ANSI_RESET + " — change error probability");
-        System.out.println(ANSI_CYAN + "info" + ANSI_RESET + " — program info");
-        System.out.println(ANSI_CYAN + "help" + ANSI_RESET + " — help menu");
+        System.out.println(ANSI_CYAN + CMD_CHANGE_ERROR_PROB + ANSI_RESET + " — change error probability. Usage: "
+                + ANSI_YELLOW + CMD_CHANGE_ERROR_PROB + " {float numberInRangeFrom0To1}" + ANSI_RESET + ".");
+        System.out.println(ANSI_CYAN + CMD_DECODE + ANSI_RESET + " — decode last encoded string.");
+        System.out.println(ANSI_CYAN + CMD_ENCODE + ANSI_RESET + " — encode provided string. Usage: "
+                + ANSI_YELLOW + CMD_ENCODE + " \"{String someString}\"" + ANSI_RESET + ".");
+        System.out.println(ANSI_CYAN + CMD_HELP + ANSI_RESET + " — help menu.");
+        System.out.println(ANSI_CYAN + CMD_INFO + ANSI_RESET + " — program info.");
+        System.out.println(ANSI_CYAN + CMD_INPUT + ANSI_RESET + " — input new raw string to be encoded or decoded." +
+                " Usage: " + ANSI_YELLOW + CMD_INPUT + " \"{String someString}\"" + ANSI_RESET + ".");
+        System.out.println(ANSI_CYAN + CMD_PROBABILITY + ANSI_RESET + " — print current error probability.");
+        System.out.println(ANSI_CYAN + CMD_RESULT + ANSI_RESET + " — print current state of the coded vector.");
+    }
+
+    public static void printGreeting() {
+        System.out.println("Welcome to A15 encoder/decoder!");
+        System.out.println("Default channel error probability is: " + ANSI_GREEN + errorProbability + ANSI_RESET + ".");
+        System.out.println("Get help by using the " + ANSI_CYAN + CMD_HELP + ANSI_RESET + " command.");
+    }
+
+    private static int countOccurences(
+            String someString, char searchedChar, int index) {
+        if (index >= someString.length()) {
+            return 0;
+        }
+
+        int count = someString.charAt(index) == searchedChar ? 1 : 0;
+        return count + countOccurences(
+                someString, searchedChar, index + 1);
     }
 }
