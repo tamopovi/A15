@@ -6,6 +6,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.VU.Constants.*;
+import static com.VU.Utils.countOccurences;
 
 public class Main {
 
@@ -137,16 +138,5 @@ public class Main {
         System.out.println("Welcome to A15 encoder/decoder!");
         System.out.println("Default channel error probability is: " + ANSI_GREEN + DEFAULT_ERROR_PROBABILITY + ANSI_RESET + ".");
         System.out.println("Get help by using the " + ANSI_CYAN + CMD_HELP + ANSI_RESET + " command.");
-    }
-
-    private static int countOccurences(
-            String someString, char searchedChar, int index) {
-        if (index >= someString.length()) {
-            return 0;
-        }
-
-        int count = someString.charAt(index) == searchedChar ? 1 : 0;
-        return count + countOccurences(
-                someString, searchedChar, index + 1);
     }
 }

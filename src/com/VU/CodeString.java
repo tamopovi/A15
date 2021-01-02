@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static com.VU.Constants.*;
+import static com.VU.Utils.*;
 
 public class CodeString {
     private String rawString;
@@ -55,6 +56,11 @@ public class CodeString {
         try {
             // do some stuff with inputString
             setRawString(inputString);
+
+            if (countOccurences(inputString, '0', 0) +
+                    countOccurences(inputString, '1', 0) == inputString.length()) {
+                setEncodedString(this.encodeBinaryVector(inputString));
+            }
             setEncodedString("NEW ENCODED STRING FROM IN");
             System.out.println(MSG_SUCCESS);
             System.out.println("Raw string was: \"" + ANSI_YELLOW + inputString + ANSI_RESET + "\"." +
@@ -116,8 +122,11 @@ public class CodeString {
                 System.out.println(ANSI_RED + e.getMessage() + ANSI_RESET);
             }
         }
+    }
 
-
+    private String encodeBinaryVector(String inputString) {
+        System.out.println("Encoding binary vector...");
+        return "";
     }
 
     // TODO: write positions and percentages when encoding/decoding is done
