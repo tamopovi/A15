@@ -13,29 +13,14 @@ public class Main {
     public static void commandNotFound(String inputStr) {
         System.out.println(ANSI_RED + "Command \"" + inputStr + "\" was not found." + ANSI_RESET);
     }
-
-    public static void printCurrentErrorProbability() {
-        System.out.println("Current error probability is: " + ANSI_GREEN + getErrorProbability() + ANSI_RESET + ".");
-    }
-
-    public static float getErrorProbability() {
-        return errorProbability;
-    }
-
-    public static void setErrorProbability(float newProbability) {
-        if (newProbability >= 0 && newProbability <= 1) {
-            errorProbability = newProbability;
-            System.out.println(ANSI_YELLOW + "Error probability was changed to: " + ANSI_GREEN + errorProbability + ANSI_RESET + ".");
-        }
-    }
-
     public static float errorProbability = 0;
 
     public static void main(String[] args) {
         printGreeting();
         Scanner scanner = new Scanner(System.in);
-        String inputLine;
+        Channel channel = new Channel(DEFAULT_ERROR_PROBABILITY);
         CodeString codeString = new CodeString();
+        String inputLine;
         do {
             System.out.print(INPUT_PREFIX);
             inputLine = scanner.nextLine();
@@ -49,12 +34,12 @@ public class Main {
                         System.out.println(ERROR_NO_ARGUMENTS_FOR_CEP);
                         break;
                     }
-                    setErrorProbability(readProbability(params[0]));
+                    channel.setErrorProbability(readProbability(params[0]));
                     break;
                 }
 
                 case CMD_PROBABILITY: {
-                    printCurrentErrorProbability();
+                    channel.printCurrentErrorProbability();
                     break;
                 }
                 case CMD_INFO: {
@@ -69,7 +54,6 @@ public class Main {
                     if (params.length == 0) {
                         codeString.encode(codeString.getRawString());
                     } else {
-                        System.out.println("Params length: " + params.length);
                         if (countOccurences(inputLine, '"', 0) % 2 == 0) {
                             Pattern p = Pattern.compile("\"([^\"]*)\"");
                             Matcher m = p.matcher(inputLine);
@@ -86,7 +70,8 @@ public class Main {
                     codeString.decode();
                     break;
                 }
-                case CMD_RESULT: {
+                case CMD_STATE: {
+                    channel.printCurrentErrorProbability();
                     codeString.printCurrentState();
                     break;
                 }
@@ -96,6 +81,14 @@ public class Main {
                     while (m.find()) {
                         codeString.setRawString(m.group(1));
                     }
+                    break;
+                }
+                case CMD_SEND: {
+                    channel.sendMessage(codeString);
+                    break;
+                }
+                case CMD_EDIT: {
+                    codeString.editReceivedString();
                     break;
                 }
                 default: {
@@ -129,17 +122,20 @@ public class Main {
         System.out.println(ANSI_CYAN + CMD_DECODE + ANSI_RESET + " — decode last encoded string.");
         System.out.println(ANSI_CYAN + CMD_ENCODE + ANSI_RESET + " — encode provided string. Usage: "
                 + ANSI_YELLOW + CMD_ENCODE + " \"{String someString}\"" + ANSI_RESET + ".");
+        System.out.println(ANSI_CYAN + CMD_EDIT + ANSI_RESET + " — edit the received message from the channel. " +
+                "A message must be sent before editing.");
         System.out.println(ANSI_CYAN + CMD_HELP + ANSI_RESET + " — help menu.");
         System.out.println(ANSI_CYAN + CMD_INFO + ANSI_RESET + " — program info.");
         System.out.println(ANSI_CYAN + CMD_INPUT + ANSI_RESET + " — input new raw string to be encoded or decoded." +
                 " Usage: " + ANSI_YELLOW + CMD_INPUT + " \"{String someString}\"" + ANSI_RESET + ".");
         System.out.println(ANSI_CYAN + CMD_PROBABILITY + ANSI_RESET + " — print current error probability.");
-        System.out.println(ANSI_CYAN + CMD_RESULT + ANSI_RESET + " — print current state of the coded vector.");
+        System.out.println(ANSI_CYAN + CMD_SEND + ANSI_RESET + " — send codestring through the channel. Encoded message must be set before running this command.");
+        System.out.println(ANSI_CYAN + CMD_STATE + ANSI_RESET + " — print current state of the coded vector.");
     }
 
     public static void printGreeting() {
         System.out.println("Welcome to A15 encoder/decoder!");
-        System.out.println("Default channel error probability is: " + ANSI_GREEN + errorProbability + ANSI_RESET + ".");
+        System.out.println("Default channel error probability is: " + ANSI_GREEN + DEFAULT_ERROR_PROBABILITY + ANSI_RESET + ".");
         System.out.println("Get help by using the " + ANSI_CYAN + CMD_HELP + ANSI_RESET + " command.");
     }
 
