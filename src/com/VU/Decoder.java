@@ -2,15 +2,10 @@ package com.VU;
 
 import java.util.ArrayList;
 
-import static com.VU.Utils.*;
-
-
 public class Decoder {
     private ArrayList<Integer> upperChain;
     private ArrayList<Integer> lowerChain;
     private ArrayList<Integer> MDE;
-    private Character MDEResult;
-
     public Decoder() {
         upperChain = new ArrayList<>();
         lowerChain = new ArrayList<>();
@@ -20,7 +15,6 @@ public class Decoder {
             lowerChain.add(0);
         }
     }
-
 
     public Character getDecodedBit(ArrayList<Character> twoBitList) {
         int upperBit = -1;

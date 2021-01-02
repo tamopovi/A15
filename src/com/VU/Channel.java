@@ -9,10 +9,6 @@ import static com.VU.Utils.*;
 public class Channel {
     private float errorProbability;
 
-    public Channel() {
-        errorProbability = 0;
-    }
-
     public Channel(float errorProbability) {
         this.errorProbability = errorProbability;
     }

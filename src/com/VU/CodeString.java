@@ -120,11 +120,11 @@ public class CodeString {
                 + ANSI_RESET + "\".");
         System.out.println("Current encoded string: \"" + ANSI_YELLOW + encodedString
                 + ANSI_RESET + "\".");
-        System.out.println("Current decoded string: \"" + ANSI_YELLOW + decodedString
+        System.out.println("Current decoded string: \"" + ANSI_YELLOW + getDecodedString()
                 + ANSI_RESET + "\".");
         System.out.println("Current received string from channel: \"" + ANSI_YELLOW + receivedString
                 + ANSI_RESET + "\".");
-        if (rawString == null || encodedString == null || decodedString == null || receivedString == null) {
+        if (rawString == null || encodedString == null || getDecodedString() == null || receivedString == null) {
             System.out.println(ANSI_YELLOW + "Some string values are null.\nYou might have not initialized the " +
                     "coding string or did not use the commands \"" + CMD_ENCODE + "\", \"" + CMD_DECODE + "\" or \""
                     + CMD_SEND + "\"." + ANSI_RESET);
@@ -166,22 +166,15 @@ public class CodeString {
         setEncodedString(charArrayListToString(encoded));
     }
 
-    //    // TODO: write positions and percentages when encoding/decoding is done
     public void printErrorPositions() {
         // compare encodedString with receivedString
         System.out.println("Encoded string was: \"" + ANSI_YELLOW + encodedString + ANSI_RESET + "\". " +
                 "(length = " + ANSI_GREEN + encodedString.length() + ANSI_RESET + ")");
         System.out.println("Received string was: \"" + ANSI_YELLOW + receivedString + ANSI_RESET + "\". " +
                 "(length = " + ANSI_GREEN + receivedString.length() + ANSI_RESET + ")");
-        String str1;
-        String str2;
-        if (encodedString.length() >= receivedString.length()) {
-            str1 = receivedString;
-            str2 = encodedString;
-        } else {
-            str1 = encodedString;
-            str2 = receivedString;
-        }
+        String str1 = encodedString;
+        String str2 = receivedString;
+
         int diffCount = (int) IntStream.range(0, str1.length())
                 .filter(i -> str1.charAt(i) != str2.charAt(i)) // corresponding characters from both the strings
                 .count();
@@ -200,13 +193,11 @@ public class CodeString {
     public void printDiff() {
         System.out.println("Encoded string was: \"" + ANSI_YELLOW + rawString + ANSI_RESET + "\". " +
                 "(length = " + ANSI_GREEN + rawString.length() + ANSI_RESET + ")");
-        System.out.println("Decoded string was: \"" + ANSI_YELLOW + decodedString + ANSI_RESET + "\". " +
-                "(length = " + ANSI_GREEN + decodedString.length() + ANSI_RESET + ")");
+        System.out.println("Decoded string was: \"" + ANSI_YELLOW + getDecodedString() + ANSI_RESET + "\". " +
+                "(length = " + ANSI_GREEN + getDecodedString().length() + ANSI_RESET + ")");
 
-        String str1;
-        String str2;
-        str1 = decodedString;
-        str2 = rawString;
+        String str1 = getDecodedString();
+        String str2 = getRawString();
 
         int diffCount = (int) IntStream.range(0, str1.length())
                 .filter(i -> str1.charAt(i) != str2.charAt(i)) // corresponding characters from both the strings
