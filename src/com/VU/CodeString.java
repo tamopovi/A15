@@ -12,8 +12,10 @@ public class CodeString {
     private String encodedString;
     private String decodedString;
     private String receivedString;
+    private Encoder encoder;
 
     public CodeString() {
+        encoder = new Encoder();
     }
 
     public String getRawString() {
@@ -56,12 +58,19 @@ public class CodeString {
         try {
             // do some stuff with inputString
             setRawString(inputString);
-
             if (countOccurences(inputString, '0', 0) +
                     countOccurences(inputString, '1', 0) == inputString.length()) {
-                setEncodedString(this.encodeBinaryVector(inputString));
+                encodeBinaryVector(inputString + "000000");
+            } else {
+
+                String inputBits = convertStringToBinary(rawString) + "000000";
+                ArrayList<Character> encoded = new ArrayList<Character>();
+                for (char bit : inputBits.toCharArray()) {
+                    encoded.add(bit);
+                    encoded.add(encoder.getEncodedBit(bit));
+                }
+                setEncodedString(charArrayListToString(encoded));
             }
-            setEncodedString("NEW ENCODED STRING FROM IN");
             System.out.println(MSG_SUCCESS);
             System.out.println("Raw string was: \"" + ANSI_YELLOW + inputString + ANSI_RESET + "\"." +
                     "\nEncoded result: \"" + ANSI_YELLOW + encodedString + ANSI_RESET + "\".");
@@ -124,10 +133,22 @@ public class CodeString {
         }
     }
 
-    private String encodeBinaryVector(String inputString) {
+    private void encodeBinaryVector(String inputBits) {
         System.out.println("Encoding binary vector...");
-        return "";
+        ArrayList<Character> encoded = new ArrayList<Character>();
+        for (char bit : inputBits.toCharArray()) {
+            encoded.add(bit);
+            encoded.add(encoder.getEncodedBit(bit));
+        }
+        setEncodedString(charArrayListToString(encoded));
     }
+
+//    public void enc(Integer encodingBit) {
+//        Integer encodedBit = encoder.getEncodedBit(encodingBit);
+//        String encodedResult = encodingBit.toString() + encodedBit.toString();
+//        encoder.printEncodingChain();
+//        System.out.println(encodedResult);
+//    }
 
     // TODO: write positions and percentages when encoding/decoding is done
     public void printErrorPositions() {

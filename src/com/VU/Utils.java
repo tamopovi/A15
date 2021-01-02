@@ -1,6 +1,7 @@
 package com.VU;
 
 import java.util.ArrayList;
+import java.util.BitSet;
 import java.util.Random;
 
 public final class Utils {
@@ -31,5 +32,28 @@ public final class Utils {
     public static char generateRandomUnicodeChar() {
         Random r = new Random();
         return (char) r.nextInt(10000);
+    }
+
+    public static String convertStringToBinary(String input) {
+
+        StringBuilder result = new StringBuilder();
+        char[] chars = input.toCharArray();
+        for (char aChar : chars) {
+            result.append(
+                    String.format("%8s", Integer.toBinaryString(aChar))   // char -> int, auto-cast
+                            .replaceAll(" ", "0")                         // zero pads
+            );
+        }
+        return result.toString();
+    }
+    private static BitSet fromString(String binary) {
+        BitSet bitset = new BitSet(binary.length());
+        int len = binary.length();
+        for (int i = len-1; i >= 0; i--) {
+            if (binary.charAt(i) == '1') {
+                bitset.set(len-i-1);
+            }
+        }
+        return bitset;
     }
 }

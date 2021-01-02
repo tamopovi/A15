@@ -17,7 +17,6 @@ public class Main {
         System.out.println(ANSI_RED + "Command \"" + inputStr + "\" was not found." + ANSI_RESET);
     }
 
-    public static float errorProbability = 0;
 
     public static void main(String[] args) {
         printGreeting();
@@ -104,26 +103,34 @@ public class Main {
                 case CMD_QUIT: {
                     break;
                 }
-                case "queue": {
-                    Pattern p = Pattern.compile("\"([^\"]*)\"");
-                    Matcher m = p.matcher(inputLine);
-                    while (m.find()) {
-                        queue.add(m.group(1));
-                    }
-                    System.out.println(queue.toString());
-                    break;
-                }
-                case "qget": {
-                  System.out.println(queue.peek());
-                    System.out.println(queue.toString());
-                    break;
-                }
-
-                case "qremove": {
-                    queue.remove();
-                    System.out.println(queue.toString());
-                    break;
-                }
+//                case "queue": {
+//                    Pattern p = Pattern.compile("\"([^\"]*)\"");
+//                    Matcher m = p.matcher(inputLine);
+//                    while (m.find()) {
+//                        queue.add(m.group(1));
+//                    }
+//                    System.out.println(queue.toString());
+//                    break;
+//                }
+//                case "qget": {
+//                    System.out.println(queue.peek());
+//                    System.out.println(queue.toString());
+//                    break;
+//                }
+//
+//                case "qremove": {
+//                    queue.remove();
+//                    System.out.println(queue.toString());
+//                    break;
+//                }
+//                case "enc": {
+//                    Pattern p = Pattern.compile("\"([^\"]*)\"");
+//                    Matcher m = p.matcher(inputLine);
+//                    while (m.find()) {
+//                        codeString.enc(Integer.parseInt(m.group(1)));
+//                    }
+//                    break;
+//                }
             }
 
         }
