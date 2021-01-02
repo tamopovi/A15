@@ -1,6 +1,7 @@
 package com.VU;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.BitSet;
 import java.util.Random;
 
@@ -35,7 +36,6 @@ public final class Utils {
     }
 
     public static String convertStringToBinary(String input) {
-
         StringBuilder result = new StringBuilder();
         char[] chars = input.toCharArray();
         for (char aChar : chars) {
@@ -46,14 +46,17 @@ public final class Utils {
         }
         return result.toString();
     }
-    private static BitSet fromString(String binary) {
-        BitSet bitset = new BitSet(binary.length());
-        int len = binary.length();
-        for (int i = len-1; i >= 0; i--) {
-            if (binary.charAt(i) == '1') {
-                bitset.set(len-i-1);
-            }
-        }
-        return bitset;
+
+    public static String getTextFromBinary(String input) {
+        StringBuilder sb = new StringBuilder(); // Some place to store the chars
+
+        Arrays.stream( // Create a Stream
+                input.split("(?<=\\G.{8})") // Splits the input string into 8-char-sections (Since a char has 8 bits = 1 byte)
+        ).forEach(s -> // Go through each 8-char-section...
+                sb.append((char) Integer.parseInt(s, 2)) // ...and turn it into an int and then to a char
+        );
+
+        String output = sb.toString(); // Output text (t)
+        return output;
     }
 }

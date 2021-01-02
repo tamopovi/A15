@@ -13,9 +13,11 @@ public class CodeString {
     private String decodedString;
     private String receivedString;
     private Encoder encoder;
+    private Decoder decoder;
 
     public CodeString() {
         encoder = new Encoder();
+        decoder = new Decoder();
     }
 
     public String getRawString() {
@@ -62,8 +64,9 @@ public class CodeString {
                     countOccurences(inputString, '1', 0) == inputString.length()) {
                 encodeBinaryVector(inputString + "000000");
             } else {
-
                 String inputBits = convertStringToBinary(rawString) + "000000";
+                System.out.println("Input bits: " + inputBits + "\nInput bit length = " + ANSI_GREEN +
+                        inputBits.length() + ANSI_RESET + ".");
                 ArrayList<Character> encoded = new ArrayList<Character>();
                 for (char bit : inputBits.toCharArray()) {
                     encoded.add(bit);
@@ -74,6 +77,7 @@ public class CodeString {
             System.out.println(MSG_SUCCESS);
             System.out.println("Raw string was: \"" + ANSI_YELLOW + inputString + ANSI_RESET + "\"." +
                     "\nEncoded result: \"" + ANSI_YELLOW + encodedString + ANSI_RESET + "\".");
+            System.out.println("Encoded result length = " + ANSI_GREEN + encodedString.length() + ANSI_RESET + ".");
         } catch (Exception e) {
             System.out.println(MSG_ENCODING_FAILED);
             System.out.println(ANSI_RED + e.getMessage() + ANSI_RESET);
@@ -81,12 +85,26 @@ public class CodeString {
     }
 
     public void decode() {
-        // do some stuff with received string
         if (receivedString == null) {
             System.out.println(ERROR_DECODING_EMPTY);
         } else {
             try {
-                setDecodedString("NEW DECODED STRING");
+                String decodedMessage = new String();
+                ArrayList<Character> receivedCharArray = new ArrayList<>();
+                for (char c : receivedString.toCharArray()) {
+                    receivedCharArray.add(c);
+                }
+                while (receivedCharArray.size() > 0) {
+                    decodedMessage += decoder.getDecodedBit(new ArrayList<>(receivedCharArray.subList(0, 2)));
+                    receivedCharArray.remove(0);
+                    receivedCharArray.remove(0);
+                }
+                if (countOccurences(rawString, '0', 0) +
+                        countOccurences(rawString, '1', 0) == rawString.length()) {
+                    setDecodedString(decodedMessage.substring(6));
+
+                } else
+                    setDecodedString(getTextFromBinary(decodedMessage.substring(6)));
                 System.out.println(MSG_SUCCESS);
                 this.printCurrentState();
             } catch (Exception e) {
@@ -94,13 +112,18 @@ public class CodeString {
                 System.out.println(ANSI_RED + e.getMessage() + ANSI_RESET);
             }
         }
+        printDiff();
     }
 
     public void printCurrentState() {
-        System.out.println("Current raw string from input: \"" + ANSI_YELLOW + rawString + ANSI_RESET + "\".");
-        System.out.println("Current encoded string: \"" + ANSI_YELLOW + encodedString + ANSI_RESET + "\".");
-        System.out.println("Current decoded string: \"" + ANSI_YELLOW + decodedString + ANSI_RESET + "\".");
-        System.out.println("Current received string from channel: \"" + ANSI_YELLOW + receivedString + ANSI_RESET + "\".");
+        System.out.println("Current raw string from input: \"" + ANSI_YELLOW + rawString
+                + ANSI_RESET + "\".");
+        System.out.println("Current encoded string: \"" + ANSI_YELLOW + encodedString
+                + ANSI_RESET + "\".");
+        System.out.println("Current decoded string: \"" + ANSI_YELLOW + decodedString
+                + ANSI_RESET + "\".");
+        System.out.println("Current received string from channel: \"" + ANSI_YELLOW + receivedString
+                + ANSI_RESET + "\".");
         if (rawString == null || encodedString == null || decodedString == null || receivedString == null) {
             System.out.println(ANSI_YELLOW + "Some string values are null.\nYou might have not initialized the " +
                     "coding string or did not use the commands \"" + CMD_ENCODE + "\", \"" + CMD_DECODE + "\" or \""
@@ -119,7 +142,7 @@ public class CodeString {
                 Scanner scanner = new Scanner(System.in);
                 String inputLine;
                 System.out.println("Current received string from channel: \"" + ANSI_YELLOW + receivedString
-                        + ANSI_RESET + "\".");
+                        + ANSI_RESET + "\". (length = " + ANSI_GREEN + receivedString.length() + ANSI_RESET + ")");
                 System.out.println("Enter new received message:");
                 inputLine = scanner.nextLine();
                 System.out.print(INPUT_PREFIX);
@@ -143,14 +166,7 @@ public class CodeString {
         setEncodedString(charArrayListToString(encoded));
     }
 
-//    public void enc(Integer encodingBit) {
-//        Integer encodedBit = encoder.getEncodedBit(encodingBit);
-//        String encodedResult = encodingBit.toString() + encodedBit.toString();
-//        encoder.printEncodingChain();
-//        System.out.println(encodedResult);
-//    }
-
-    // TODO: write positions and percentages when encoding/decoding is done
+    //    // TODO: write positions and percentages when encoding/decoding is done
     public void printErrorPositions() {
         // compare encodedString with receivedString
         System.out.println("Encoded string was: \"" + ANSI_YELLOW + encodedString + ANSI_RESET + "\". " +
@@ -179,5 +195,23 @@ public class CodeString {
                 "the encoded message and the received message.");
         System.out.println("Differences found in these positions:");
         System.out.println(Arrays.toString(positionDiffArray.toArray()));
+    }
+
+    public void printDiff() {
+        System.out.println("Encoded string was: \"" + ANSI_YELLOW + rawString + ANSI_RESET + "\". " +
+                "(length = " + ANSI_GREEN + rawString.length() + ANSI_RESET + ")");
+        System.out.println("Decoded string was: \"" + ANSI_YELLOW + decodedString + ANSI_RESET + "\". " +
+                "(length = " + ANSI_GREEN + decodedString.length() + ANSI_RESET + ")");
+
+        String str1;
+        String str2;
+        str1 = decodedString;
+        str2 = rawString;
+
+        int diffCount = (int) IntStream.range(0, str1.length())
+                .filter(i -> str1.charAt(i) != str2.charAt(i)) // corresponding characters from both the strings
+                .count();
+        System.out.println("Encountered " + ANSI_GREEN + diffCount + ANSI_RESET + " inconsistencies while comparing " +
+                "the encoded message and the decoded message.");
     }
 }
