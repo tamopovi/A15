@@ -1,6 +1,8 @@
 package com.VU;
 
 import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -14,6 +16,7 @@ public class Main {
     public static void commandNotFound(String inputStr) {
         System.out.println(ANSI_RED + "Command \"" + inputStr + "\" was not found." + ANSI_RESET);
     }
+
     public static float errorProbability = 0;
 
     public static void main(String[] args) {
@@ -21,6 +24,7 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         Channel channel = new Channel(DEFAULT_ERROR_PROBABILITY);
         CodeString codeString = new CodeString();
+        Queue queue = new LinkedList();
         String inputLine;
         do {
             System.out.print(INPUT_PREFIX);
@@ -98,6 +102,26 @@ public class Main {
                 }
                 case CMD_EXIT:
                 case CMD_QUIT: {
+                    break;
+                }
+                case "queue": {
+                    Pattern p = Pattern.compile("\"([^\"]*)\"");
+                    Matcher m = p.matcher(inputLine);
+                    while (m.find()) {
+                        queue.add(m.group(1));
+                    }
+                    System.out.println(queue.toString());
+                    break;
+                }
+                case "qget": {
+                  System.out.println(queue.peek());
+                    System.out.println(queue.toString());
+                    break;
+                }
+
+                case "qremove": {
+                    queue.remove();
+                    System.out.println(queue.toString());
                     break;
                 }
             }
