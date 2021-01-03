@@ -95,5 +95,7 @@ public final class Utils {
                 .filter(i -> str1.charAt(i) != str2.charAt(i)) // corresponding characters from both the strings
                 .count();
         System.out.println("Encountered " + ANSI_GREEN + diffCount + ANSI_RESET + " inconsistencies while comparing messages.");
+        double percentage = Math.round((float) diffCount / (float) str1.length() * 1000) / 10.0;
+        System.out.println("Approx. " + ANSI_GREEN + percentage + "%" + ANSI_RESET + " difference.");
     }
 }

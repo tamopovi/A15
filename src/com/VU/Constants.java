@@ -25,6 +25,7 @@ public final class Constants {
     public static final String CMD_QUIT = "quit";
     public static final String CMD_SEND = "send";
     public static final String CMD_SENDIMG = "sendimg";
+    public static final String CMD_SEND_ORIGINAL = "sendoriginal";
     public static final String CMD_STATE = "state";
 
 

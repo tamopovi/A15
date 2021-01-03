@@ -97,7 +97,7 @@ public class Main {
                     codeString.editReceivedString();
                     break;
                 }
-                case "sendoriginal": {
+                case CMD_SEND_ORIGINAL: {
                     String fileName = null;
                     Pattern p = Pattern.compile("\"([^\"]*)\"");
                     Matcher m = p.matcher(inputLine);
@@ -193,8 +193,10 @@ public class Main {
                 " Usage: " + ANSI_YELLOW + CMD_INPUT + " \"{String someString}\"" + ANSI_RESET + ".");
         System.out.println(ANSI_CYAN + CMD_PROBABILITY + ANSI_RESET + " — print current error probability.");
         System.out.println(ANSI_CYAN + CMD_SEND + ANSI_RESET + " — send codestring through the channel. Encoded message must be set before running this command.");
-        System.out.println(ANSI_CYAN + CMD_SENDIMG + ANSI_RESET + " — send image through the channel.  Usage: "
-                + ANSI_YELLOW + CMD_SENDIMG + " \"image.bmp\"" + ANSI_RESET);
+        System.out.println(ANSI_CYAN + CMD_SENDIMG + ANSI_RESET + " — send image from assets directory through the channel with encoding" +
+                ".  Usage: " + ANSI_YELLOW + CMD_SENDIMG + " \"image.bmp\"" + ANSI_RESET);
+        System.out.println(ANSI_CYAN + CMD_SEND_ORIGINAL + ANSI_RESET + " — send image from assets directory through" +
+                " the channel without encoding.  Usage: " + ANSI_YELLOW + CMD_SENDIMG + " \"image.bmp\"" + ANSI_RESET);
         System.out.println(ANSI_CYAN + CMD_STATE + ANSI_RESET + " — print current state of the coded vector.");
     }
 
