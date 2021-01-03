@@ -97,6 +97,31 @@ public class Main {
                     codeString.editReceivedString();
                     break;
                 }
+                case "sendoriginal": {
+                    String fileName = null;
+                    Pattern p = Pattern.compile("\"([^\"]*)\"");
+                    Matcher m = p.matcher(inputLine);
+                    while (m.find()) {
+                        fileName = m.group(1);
+                    }
+                    String imagePath = System.getProperty("user.dir") + "\\assets\\" + fileName;
+                    if (fileName != null)
+                        try {
+                            String imageFormat = fileName.substring(fileName.length() - 3);
+                            BufferedImage bImage = ImageIO.read(new File(imagePath));
+                            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                            ImageIO.write(bImage, imageFormat, bos);
+                            byte[] imageBytes = bos.toByteArray();
+                            codeString.setRawString(byteArrayToBinaryString(imageBytes));
+
+                            channel.sendOriginalImage(codeString);
+                            byte[] imageBytesFromChannel = binaryStringToByteArray(codeString.getReceivedString());
+                            byteArrayToImage(imageBytesFromChannel, "received-" + fileName);
+                        } catch (Exception e) {
+                            System.out.println(ANSI_RED + e.getMessage() + ANSI_RESET);
+                        }
+                    break;
+                }
                 case CMD_SENDIMG: {
                     String fileName = null;
                     Pattern p = Pattern.compile("\"([^\"]*)\"");
@@ -116,12 +141,14 @@ public class Main {
                             // encode
                             codeString.encodeImg(byteArrayToBinaryString(imageBytes));
 
-                            channel.sendImage(codeString);
+                            // send
+                            channel.sendEncodedImage(codeString);
 
                             //decode
                             codeString.decode();
                             byte[] decodedBytes = binaryStringToByteArray(codeString.getDecodedString());
                             byteArrayToImage(decodedBytes, "decoded-" + fileName);
+                            System.out.println("Received message was decoded. Check decoded-{originalFileName} file.");
                         } catch (Exception e) {
                             System.out.println(ANSI_RED + e.getMessage() + ANSI_RESET);
                         }

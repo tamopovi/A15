@@ -3,6 +3,7 @@ package com.VU;
 public final class Constants {
     public static final String INPUT_PREFIX = ">";
     public static final float DEFAULT_ERROR_PROBABILITY = 0;
+    public static final int bmpHeaderBitSize = 1104;    // 14 (Bitmap file header) + 124 (DIB header) bytes
 
     // colors
     public static final String ANSI_RESET = "\u001B[0m";

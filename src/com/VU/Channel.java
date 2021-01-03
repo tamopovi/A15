@@ -66,7 +66,7 @@ public class Channel {
         }
     }
 
-    public void sendImage(CodeString codeString) {
+    public void sendEncodedImage(CodeString codeString) {
         try {
             // send the message through the channel
             if (codeString.getEncodedString() == null) {
@@ -81,7 +81,6 @@ public class Channel {
                                         Collectors.toList()
                                 )
                 );
-                int bmpHeaderBitSize = 1104;    // 14 (Bitmap file header) + 124 (DIB header) bytes
                 ArrayList<Character> outputMessageVector = new ArrayList<>();
                 for (int i = 0; i < inputMessageVector.size(); i++) {
                     char el = inputMessageVector.get(i);
@@ -102,12 +101,56 @@ public class Channel {
                 }
                 System.out.println(MSG_SUCCESS);
                 codeString.setReceivedString(charArrayListToString(outputMessageVector));
-                System.out.println("Message received through the channel. Check decoded-{originalFileName} file.");
-                codeString.printErrorPositions();
+                System.out.println("Message received through the channel.");
             }
         } catch (Exception e) {
             System.out.println(MSG_FAILED_CHANNEL_TRANSFER);
             System.out.println(ANSI_RED + e.getMessage() + ANSI_RESET);
+        }
+    }
+
+    public void sendOriginalImage(CodeString codeString){
+        try {
+            // send the message through the channel
+            if (codeString.getRawString() == null) {
+                throw (new Exception(ERROR_SENDING_NULL));
+            } else {
+                System.out.println("Sending image through the channel... (Error probability: " + ANSI_GREEN + getErrorProbability()
+                        + ANSI_RESET + ")");
+                ArrayList<Character> inputMessageVector = new ArrayList<>(
+                        codeString.getRawString().chars()
+                                .mapToObj(e -> (char) e)
+                                .collect(
+                                        Collectors.toList()
+                                )
+                );
+                ArrayList<Character> outputMessageVector = new ArrayList<>();
+                for (int i = 0; i < inputMessageVector.size(); i++) {
+                    char el = inputMessageVector.get(i);
+                    if (i < bmpHeaderBitSize)
+                        outputMessageVector.add(inputMessageVector.get(i));
+                    else if (getRandomFloatInRange(0, 1) <= errorProbability) {
+                        // create an error
+                        if (el == '0') {
+                            outputMessageVector.add('1');
+                        }
+                        if (el == '1') {
+                            outputMessageVector.add('0');
+                        }
+                    } else {
+                        // pass without an error
+                        outputMessageVector.add(inputMessageVector.get(i));
+                    }
+                }
+                codeString.setReceivedString(charArrayListToString(outputMessageVector));
+                System.out.println("Comparing received message to original message...");
+                printDiff(codeString.getReceivedString(),codeString.getRawString());
+                System.out.println(MSG_SUCCESS);
+                System.out.println("Message received through the channel. Check received-{originalFileName} file.");
+            }
+        } catch (Exception e) {
+            System.out.println(MSG_FAILED_CHANNEL_TRANSFER);
+            System.out.println(ANSI_RED + e + ANSI_RESET);
         }
     }
 

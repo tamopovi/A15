@@ -8,6 +8,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
+import java.util.stream.IntStream;
+
+import static com.VU.Constants.ANSI_GREEN;
+import static com.VU.Constants.ANSI_RESET;
 
 public final class Utils {
     public static long countOccurences(String someString, char searchedChar) {
@@ -62,7 +66,7 @@ public final class Utils {
         System.out.println("Data length: " + data.length + " bytes.");
         ByteArrayInputStream bis = new ByteArrayInputStream(data);
         BufferedImage bImage2 = ImageIO.read(bis);
-        ImageIO.write(bImage2, imageName.substring(imageName.length() - 3), new File(imageName.substring(0, imageName.length() - 4) + ".bmp"));
+        ImageIO.write(bImage2, "bmp", new File(imageName.substring(0, imageName.length() - 4) + ".bmp"));
     }
 
     public static String byteArrayToBinaryString(byte[] data) {
@@ -83,5 +87,13 @@ public final class Utils {
             resultByteArr[i] = bytes.get(i).byteValue();
         }
         return resultByteArr;
+    }
+
+    public static void printDiff(String str1, String str2) {
+
+        int diffCount = (int) IntStream.range(0, str1.length())
+                .filter(i -> str1.charAt(i) != str2.charAt(i)) // corresponding characters from both the strings
+                .count();
+        System.out.println("Encountered " + ANSI_GREEN + diffCount + ANSI_RESET + " inconsistencies while comparing messages.");
     }
 }

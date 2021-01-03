@@ -135,13 +135,14 @@ public class CodeString {
                 } else
                     setDecodedString(getTextFromBinary(decodedMessage.substring(6)));
                 System.out.println(MSG_SUCCESS);
-//                this.printCurrentState();
+                System.out.println("Original message was: \"" + ANSI_YELLOW + getRawString() + ANSI_RESET + "\".");
+                System.out.println("Decoded message was: \"" + ANSI_YELLOW + getDecodedString() + ANSI_RESET + "\".");
             } catch (Exception e) {
                 System.out.println(MSG_DECODING_FAILED);
                 System.out.println(ANSI_RED + e.getMessage() + ANSI_RESET);
             }
         }
-        printDiff();
+        printDiff(getDecodedString(),getEncodedString());
     }
 
     public void printCurrentState() {
@@ -196,11 +197,6 @@ public class CodeString {
     }
 
     public void printErrorPositions() {
-        // compare encodedString with receivedString
-//        System.out.println("Encoded string was: \"" + ANSI_YELLOW + encodedString + ANSI_RESET + "\". " +
-//                "(length = " + ANSI_GREEN + encodedString.length() + ANSI_RESET + ")");
-//        System.out.println("Received string was: \"" + ANSI_YELLOW + receivedString + ANSI_RESET + "\". " +
-//                "(length = " + ANSI_GREEN + receivedString.length() + ANSI_RESET + ")");
         String str1 = encodedString;
         String str2 = receivedString;
 
@@ -217,21 +213,5 @@ public class CodeString {
                 "the encoded message and the received message.");
         System.out.println("Differences found in these positions:");
         System.out.println(Arrays.toString(positionDiffArray.toArray()));
-    }
-
-    public void printDiff() {
-//        System.out.println("Encoded string was: \"" + ANSI_YELLOW + rawString + ANSI_RESET + "\". " +
-//                "(length = " + ANSI_GREEN + rawString.length() + ANSI_RESET + ")");
-//        System.out.println("Decoded string was: \"" + ANSI_YELLOW + getDecodedString() + ANSI_RESET + "\". " +
-//                "(length = " + ANSI_GREEN + getDecodedString().length() + ANSI_RESET + ")");
-
-        String str1 = getDecodedString();
-        String str2 = getRawString();
-
-        int diffCount = (int) IntStream.range(0, str1.length())
-                .filter(i -> str1.charAt(i) != str2.charAt(i)) // corresponding characters from both the strings
-                .count();
-        System.out.println("Encountered " + ANSI_GREEN + diffCount + ANSI_RESET + " inconsistencies while comparing " +
-                "the encoded message and the decoded message.");
     }
 }
