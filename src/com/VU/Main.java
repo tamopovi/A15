@@ -1,5 +1,9 @@
 package com.VU;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.util.Arrays;
 import java.util.Scanner;
 import java.util.regex.Matcher;
@@ -7,6 +11,7 @@ import java.util.regex.Pattern;
 
 import static com.VU.Constants.*;
 import static com.VU.Utils.countOccurences;
+import static com.VU.Utils.*;
 
 public class Main {
 
@@ -55,7 +60,7 @@ public class Main {
                     if (params.length == 0) {
                         codeString.encode(codeString.getRawString());
                     } else {
-                        if (countOccurences(inputLine, '"', 0) % 2 == 0) {
+                        if (countOccurences(inputLine, '"') % 2 == 0) {
                             Pattern p = Pattern.compile("\"([^\"]*)\"");
                             Matcher m = p.matcher(inputLine);
                             while (m.find()) {
@@ -90,6 +95,36 @@ public class Main {
                 }
                 case CMD_EDIT: {
                     codeString.editReceivedString();
+                    break;
+                }
+                case CMD_SENDIMG: {
+                    String fileName = null;
+                    Pattern p = Pattern.compile("\"([^\"]*)\"");
+                    Matcher m = p.matcher(inputLine);
+                    while (m.find()) {
+                        fileName = m.group(1);
+                    }
+                    String imagePath = System.getProperty("user.dir") + "\\assets\\" + fileName;
+                    if (fileName != null)
+                        try {
+                            String imageFormat = fileName.substring(fileName.length() - 3);
+                            BufferedImage bImage = ImageIO.read(new File(imagePath));
+                            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                            ImageIO.write(bImage, imageFormat, bos);
+                            byte[] imageBytes = bos.toByteArray();
+
+                            // encode
+                            codeString.encodeImg(byteArrayToBinaryString(imageBytes));
+
+                            channel.sendImage(codeString);
+
+                            //decode
+                            codeString.decode();
+                            byte[] decodedBytes = binaryStringToByteArray(codeString.getDecodedString());
+                            byteArrayToImage(decodedBytes, "decoded-" + fileName);
+                        } catch (Exception e) {
+                            System.out.println(ANSI_RED + e.getMessage() + ANSI_RESET);
+                        }
                     break;
                 }
                 default: {
@@ -131,6 +166,8 @@ public class Main {
                 " Usage: " + ANSI_YELLOW + CMD_INPUT + " \"{String someString}\"" + ANSI_RESET + ".");
         System.out.println(ANSI_CYAN + CMD_PROBABILITY + ANSI_RESET + " — print current error probability.");
         System.out.println(ANSI_CYAN + CMD_SEND + ANSI_RESET + " — send codestring through the channel. Encoded message must be set before running this command.");
+        System.out.println(ANSI_CYAN + CMD_SENDIMG + ANSI_RESET + " — send image through the channel.  Usage: "
+                + ANSI_YELLOW + CMD_SENDIMG + " \"image.bmp\"" + ANSI_RESET);
         System.out.println(ANSI_CYAN + CMD_STATE + ANSI_RESET + " — print current state of the coded vector.");
     }
 

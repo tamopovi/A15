@@ -60,8 +60,8 @@ public class CodeString {
         try {
             // do some stuff with inputString
             setRawString(inputString);
-            if (countOccurences(inputString, '0', 0) +
-                    countOccurences(inputString, '1', 0) == inputString.length()) {
+            if (countOccurences(inputString, '0') +
+                    countOccurences(inputString, '1') == inputString.length()) {
                 encodeBinaryVector(inputString + "000000");
             } else {
                 String inputBits = convertStringToBinary(rawString) + "000000";
@@ -84,6 +84,35 @@ public class CodeString {
         }
     }
 
+    public void encodeImg(String inputString) {
+        rawString = inputString;
+        encodedString = null;
+        decodedString = null;
+        receivedString = null;
+        try {
+            // do some stuff with inputString
+            if (countOccurences(inputString, '0') +
+                    countOccurences(inputString, '1') == inputString.length()) {
+                encodeBinaryVector(inputString + "000000");
+            } else {
+                String inputBits = convertStringToBinary(rawString) + "000000";
+                System.out.println("Input byte length = " + ANSI_GREEN +
+                        inputBits.length() / 8 + ANSI_RESET + ".");
+                ArrayList<Character> encoded = new ArrayList<Character>();
+                for (char bit : inputBits.toCharArray()) {
+                    encoded.add(bit);
+                    encoded.add(encoder.getEncodedBit(bit));
+                }
+                setEncodedString(charArrayListToString(encoded));
+            }
+            System.out.println(MSG_SUCCESS);
+            System.out.println("Encoded result length = " + ANSI_GREEN + encodedString.length() / 8 + ANSI_RESET + " bytes.");
+        } catch (Exception e) {
+            System.out.println(MSG_ENCODING_FAILED);
+            System.out.println(ANSI_RED + e.getMessage() + ANSI_RESET);
+        }
+    }
+
     public void decode() {
         if (receivedString == null) {
             System.out.println(ERROR_DECODING_EMPTY);
@@ -99,14 +128,14 @@ public class CodeString {
                     receivedCharArray.remove(0);
                     receivedCharArray.remove(0);
                 }
-                if (countOccurences(rawString, '0', 0) +
-                        countOccurences(rawString, '1', 0) == rawString.length()) {
+                if (countOccurences(rawString, '0') +
+                        countOccurences(rawString, '1') == rawString.length()) {
                     setDecodedString(decodedMessage.substring(6));
 
                 } else
                     setDecodedString(getTextFromBinary(decodedMessage.substring(6)));
                 System.out.println(MSG_SUCCESS);
-                this.printCurrentState();
+//                this.printCurrentState();
             } catch (Exception e) {
                 System.out.println(MSG_DECODING_FAILED);
                 System.out.println(ANSI_RED + e.getMessage() + ANSI_RESET);
@@ -168,10 +197,10 @@ public class CodeString {
 
     public void printErrorPositions() {
         // compare encodedString with receivedString
-        System.out.println("Encoded string was: \"" + ANSI_YELLOW + encodedString + ANSI_RESET + "\". " +
-                "(length = " + ANSI_GREEN + encodedString.length() + ANSI_RESET + ")");
-        System.out.println("Received string was: \"" + ANSI_YELLOW + receivedString + ANSI_RESET + "\". " +
-                "(length = " + ANSI_GREEN + receivedString.length() + ANSI_RESET + ")");
+//        System.out.println("Encoded string was: \"" + ANSI_YELLOW + encodedString + ANSI_RESET + "\". " +
+//                "(length = " + ANSI_GREEN + encodedString.length() + ANSI_RESET + ")");
+//        System.out.println("Received string was: \"" + ANSI_YELLOW + receivedString + ANSI_RESET + "\". " +
+//                "(length = " + ANSI_GREEN + receivedString.length() + ANSI_RESET + ")");
         String str1 = encodedString;
         String str2 = receivedString;
 
@@ -191,10 +220,10 @@ public class CodeString {
     }
 
     public void printDiff() {
-        System.out.println("Encoded string was: \"" + ANSI_YELLOW + rawString + ANSI_RESET + "\". " +
-                "(length = " + ANSI_GREEN + rawString.length() + ANSI_RESET + ")");
-        System.out.println("Decoded string was: \"" + ANSI_YELLOW + getDecodedString() + ANSI_RESET + "\". " +
-                "(length = " + ANSI_GREEN + getDecodedString().length() + ANSI_RESET + ")");
+//        System.out.println("Encoded string was: \"" + ANSI_YELLOW + rawString + ANSI_RESET + "\". " +
+//                "(length = " + ANSI_GREEN + rawString.length() + ANSI_RESET + ")");
+//        System.out.println("Decoded string was: \"" + ANSI_YELLOW + getDecodedString() + ANSI_RESET + "\". " +
+//                "(length = " + ANSI_GREEN + getDecodedString().length() + ANSI_RESET + ")");
 
         String str1 = getDecodedString();
         String str2 = getRawString();

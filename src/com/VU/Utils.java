@@ -1,19 +1,21 @@
 package com.VU;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferByte;
+import java.awt.image.WritableRaster;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 
 public final class Utils {
-    public static int countOccurences(
-            String someString, char searchedChar, int index) {
-        if (index >= someString.length()) {
-            return 0;
-        }
-
-        int count = someString.charAt(index) == searchedChar ? 1 : 0;
-        return count + countOccurences(
-                someString, searchedChar, index + 1);
+    public static long countOccurences(String someString, char searchedChar) {
+        long count = someString.chars().filter(ch -> ch == searchedChar).count();
+        return count;
     }
 
     public static float getRandomFloatInRange(int min, int max) {
@@ -57,5 +59,32 @@ public final class Utils {
 
         String output = sb.toString(); // Output text (t)
         return output;
+    }
+
+    public static void byteArrayToImage(byte[] data, String imageName) throws IOException {
+        System.out.println("Data length: " + data.length + " bytes.");
+        ByteArrayInputStream bis = new ByteArrayInputStream(data);
+        BufferedImage bImage2 = ImageIO.read(bis);
+        ImageIO.write(bImage2, imageName.substring(imageName.length() - 3), new File(imageName.substring(0, imageName.length() - 4) + ".bmp"));
+    }
+
+    public static String byteArrayToBinaryString(byte[] data) {
+        StringBuilder resultString = new StringBuilder("");
+        for (byte b : data) {
+            resultString.append(String.format("%8s", Integer.toBinaryString(b & 0xFF)).replace(' ', '0'));
+        }
+        return resultString.toString();
+    }
+
+    public static byte[] binaryStringToByteArray(String binaryString) {
+        ArrayList<Integer> bytes = new ArrayList<>();
+        Arrays.stream(
+                binaryString.split("(?<=\\G.{8})"))
+                .forEach(s -> bytes.add(Integer.parseInt(s, 2)));
+        byte[] resultByteArr = new byte[(bytes.size())];
+        for (int i = 0; i < bytes.size(); i++) {
+            resultByteArr[i] = bytes.get(i).byteValue();
+        }
+        return resultByteArr;
     }
 }

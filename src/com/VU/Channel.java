@@ -2,6 +2,7 @@ package com.VU;
 
 import java.util.ArrayList;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static com.VU.Constants.*;
 import static com.VU.Utils.*;
@@ -58,6 +59,51 @@ public class Channel {
                 System.out.println(MSG_SUCCESS);
                 codeString.setReceivedString(charArrayListToString(outputMessageVector));
                 System.out.println("Message received through the channel: \"" + ANSI_YELLOW + codeString.getReceivedString() + ANSI_RESET + "\".");
+                codeString.printErrorPositions();
+            }
+        } catch (Exception e) {
+            System.out.println(MSG_FAILED_CHANNEL_TRANSFER);
+            System.out.println(ANSI_RED + e.getMessage() + ANSI_RESET);
+        }
+    }
+
+    public void sendImage(CodeString codeString) {
+        try {
+            // send the message through the channel
+            if (codeString.getEncodedString() == null) {
+                throw (new Exception(ERROR_SENDING_NULL));
+            } else {
+                System.out.println("Sending image through the channel... (Error probability: " + ANSI_GREEN + getErrorProbability()
+                        + ANSI_RESET + ")");
+                ArrayList<Character> inputMessageVector = new ArrayList<>(
+                        codeString.getEncodedString().chars()
+                                .mapToObj(e -> (char) e)
+                                .collect(
+                                        Collectors.toList()
+                                )
+                );
+                int bmpHeaderBitSize = 1104;    // 14 (Bitmap file header) + 124 (DIB header) bytes
+                ArrayList<Character> outputMessageVector = new ArrayList<>();
+                for (int i = 0; i < inputMessageVector.size(); i++) {
+                    char el = inputMessageVector.get(i);
+                    if (i < bmpHeaderBitSize)
+                        outputMessageVector.add(inputMessageVector.get(i));
+                    else if (getRandomFloatInRange(0, 1) <= errorProbability) {
+                        // create an error
+                        if (el == '0') {
+                            outputMessageVector.add('1');
+                        }
+                        if (el == '1') {
+                            outputMessageVector.add('0');
+                        }
+                    } else {
+                        // pass without an error
+                        outputMessageVector.add(inputMessageVector.get(i));
+                    }
+                }
+                System.out.println(MSG_SUCCESS);
+                codeString.setReceivedString(charArrayListToString(outputMessageVector));
+                System.out.println("Message received through the channel. Check decoded-{originalFileName} file.");
                 codeString.printErrorPositions();
             }
         } catch (Exception e) {

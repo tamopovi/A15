@@ -14,6 +14,7 @@ public final class Constants {
     // commands
     public static final String CMD_CHANGE_ERROR_PROB = "cep";
     public static final String CMD_DECODE = "decode";
+    public static final String CMD_EDIT = "edit";
     public static final String CMD_ENCODE = "encode";
     public static final String CMD_EXIT = "exit";
     public static final String CMD_HELP = "help";
@@ -22,8 +23,8 @@ public final class Constants {
     public static final String CMD_PROBABILITY = "prob";
     public static final String CMD_QUIT = "quit";
     public static final String CMD_SEND = "send";
+    public static final String CMD_SENDIMG = "sendimg";
     public static final String CMD_STATE = "state";
-    public static final String CMD_EDIT = "edit";
 
 
     // errors
