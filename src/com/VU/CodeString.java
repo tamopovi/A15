@@ -120,6 +120,7 @@ public class CodeString {
             try {
                 String decodedMessage = new String();
                 ArrayList<Character> receivedCharArray = new ArrayList<>();
+                System.out.println("Decoding...");
                 for (char c : receivedString.toCharArray()) {
                     receivedCharArray.add(c);
                 }
