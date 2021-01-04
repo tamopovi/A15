@@ -49,7 +49,7 @@ public class Main {
                     break;
                 }
                 case CMD_INFO: {
-                    System.out.println("Program written by Vilnius University 4th year CS Bachelors student Povilas Tamošauskas, 2021.");
+                    System.out.println("Program written by Vilnius University 4th year CS Bachelors student Povilas Tamosauskas, 2021.");
                     break;
                 }
                 case CMD_HELP: {
@@ -98,44 +98,34 @@ public class Main {
                     break;
                 }
                 case CMD_SEND_ORIGINAL: {
-                    String fileName = null;
-                    Pattern p = Pattern.compile("\"([^\"]*)\"");
-                    Matcher m = p.matcher(inputLine);
-                    while (m.find()) {
-                        fileName = m.group(1);
-                    }
-                    String imagePath = System.getProperty("user.dir") + "\\assets\\" + fileName;
+                    System.out.println("Enter the path to the input BMP picture. The format is 'C:/.../picture.bmp'");
+                    String fileName = scanner.next();
                     if (fileName != null)
                         try {
-                            String imageFormat = fileName.substring(fileName.length() - 3);
-                            BufferedImage bImage = ImageIO.read(new File(imagePath));
+                            File fnew = new File(fileName);
+                            BufferedImage bImage = ImageIO.read(fnew);
                             ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                            ImageIO.write(bImage, imageFormat, bos);
+                            ImageIO.write(bImage, "bmp", bos);
                             byte[] imageBytes = bos.toByteArray();
                             codeString.setRawString(byteArrayToBinaryString(imageBytes));
 
                             channel.sendOriginalImage(codeString);
                             byte[] imageBytesFromChannel = binaryStringToByteArray(codeString.getReceivedString());
-                            byteArrayToImage(imageBytesFromChannel, "received-" + fileName);
+                            byteArrayToImage(imageBytesFromChannel, "received-message.bmp");
                         } catch (Exception e) {
                             System.out.println(ANSI_RED + e.getMessage() + ANSI_RESET);
                         }
                     break;
                 }
                 case CMD_SENDIMG: {
-                    String fileName = null;
-                    Pattern p = Pattern.compile("\"([^\"]*)\"");
-                    Matcher m = p.matcher(inputLine);
-                    while (m.find()) {
-                        fileName = m.group(1);
-                    }
-                    String imagePath = System.getProperty("user.dir") + "\\assets\\" + fileName;
+                    System.out.println("Enter the path to the input BMP picture. The format is 'C:/.../picture.bmp'");
+                    String fileName = scanner.next();
                     if (fileName != null)
                         try {
-                            String imageFormat = fileName.substring(fileName.length() - 3);
-                            BufferedImage bImage = ImageIO.read(new File(imagePath));
+                            File fnew = new File(fileName);
+                            BufferedImage bImage = ImageIO.read(fnew);
                             ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                            ImageIO.write(bImage, imageFormat, bos);
+                            ImageIO.write(bImage, "bmp", bos);
                             byte[] imageBytes = bos.toByteArray();
 
                             // encode
@@ -147,8 +137,8 @@ public class Main {
                             //decode
                             codeString.decode();
                             byte[] decodedBytes = binaryStringToByteArray(codeString.getDecodedString());
-                            byteArrayToImage(decodedBytes, "decoded-" + fileName);
-                            System.out.println("Received message was decoded. Check decoded-{originalFileName} file.");
+                            byteArrayToImage(decodedBytes, "decoded-message.bmp");
+                            System.out.println("Received message was decoded. Check decoded-message.bmp file.");
                         } catch (Exception e) {
                             System.out.println(ANSI_RED + e.getMessage() + ANSI_RESET);
                         }
@@ -213,10 +203,10 @@ public class Main {
                 " Usage: " + ANSI_YELLOW + CMD_INPUT + " \"{String someString}\"" + ANSI_RESET + ".");
         System.out.println(ANSI_CYAN + CMD_PROBABILITY + ANSI_RESET + " — print current error probability.");
         System.out.println(ANSI_CYAN + CMD_SEND + ANSI_RESET + " — send codestring through the channel. Encoded message must be set before running this command.");
-        System.out.println(ANSI_CYAN + CMD_SENDIMG + ANSI_RESET + " — send image from assets directory through the channel with encoding" +
-                ".  Usage: " + ANSI_YELLOW + CMD_SENDIMG + " \"image.bmp\"" + ANSI_RESET);
-        System.out.println(ANSI_CYAN + CMD_SEND_ORIGINAL + ANSI_RESET + " — send image from assets directory through" +
-                " the channel without encoding.  Usage: " + ANSI_YELLOW + CMD_SENDIMG + " \"image.bmp\"" + ANSI_RESET);
+        System.out.println(ANSI_CYAN + CMD_SENDIMG + ANSI_RESET + " — send image from provided path through the channel with encoding" +
+                ".  Usage: " + ANSI_YELLOW + CMD_SENDIMG + ANSI_RESET + " press enter, add the image path, enter.");
+        System.out.println(ANSI_CYAN + CMD_SEND_ORIGINAL + ANSI_RESET + " — send image from provided path through" +
+                " the channel without encoding.  Usage: " + ANSI_YELLOW + CMD_SENDIMG + ANSI_RESET + " press enter, add the image path, enter.");
         System.out.println(ANSI_CYAN + CMD_STATE + ANSI_RESET + " — print current state of the coded vector.");
     }
 

@@ -65,7 +65,7 @@ public final class Utils {
     public static void byteArrayToImage(byte[] data, String imageName) throws IOException {
         ByteArrayInputStream bis = new ByteArrayInputStream(data);
         BufferedImage bImage2 = ImageIO.read(bis);
-        ImageIO.write(bImage2, "bmp", new File(imageName.substring(0, imageName.length() - 4) + ".bmp"));
+        ImageIO.write(bImage2, "bmp", new File(imageName));
     }
 
     public static String byteArrayToBinaryString(byte[] data) {

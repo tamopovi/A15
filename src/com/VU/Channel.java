@@ -150,7 +150,7 @@ public class Channel {
                 System.out.println("Comparing received message to original message...");
                 printDiff(codeString.getReceivedString(), codeString.getRawString());
                 System.out.println(MSG_SUCCESS);
-                System.out.println("Message received through the channel. Check received-{originalFileName} file.");
+                System.out.println("Message received through the channel. Check received-message.bmp file.");
             }
         } catch (Exception e) {
             System.out.println(MSG_FAILED_CHANNEL_TRANSFER);
