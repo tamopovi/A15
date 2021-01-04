@@ -66,7 +66,7 @@ public class CodeString {
             } else {
                 String inputBits = convertStringToBinary(rawString) + "000000";
                 System.out.println("Input bits: " + inputBits + "\nInput bit length = " + ANSI_GREEN +
-                        inputBits.length() + ANSI_RESET + ".");
+                        inputBits.length() + ANSI_RESET + " bits.");
                 ArrayList<Character> encoded = new ArrayList<Character>();
                 for (char bit : inputBits.toCharArray()) {
                     encoded.add(bit);
@@ -77,7 +77,7 @@ public class CodeString {
             System.out.println(MSG_SUCCESS);
             System.out.println("Raw string was: \"" + ANSI_YELLOW + inputString + ANSI_RESET + "\"." +
                     "\nEncoded result: \"" + ANSI_YELLOW + encodedString + ANSI_RESET + "\".");
-            System.out.println("Encoded result length = " + ANSI_GREEN + encodedString.length() + ANSI_RESET + ".");
+            System.out.println("Encoded result length = " + ANSI_GREEN + encodedString.length() + ANSI_RESET + " bits.");
         } catch (Exception e) {
             System.out.println(MSG_ENCODING_FAILED);
             System.out.println(ANSI_RED + e.getMessage() + ANSI_RESET);
@@ -143,7 +143,8 @@ public class CodeString {
                 System.out.println(ANSI_RED + e.getMessage() + ANSI_RESET);
             }
         }
-        printDiff(getDecodedString(),getEncodedString());
+        System.out.println("Comparing decoded message to the original message...");
+        printDiff(getDecodedString(),getRawString());
     }
 
     public void printCurrentState() {

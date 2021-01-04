@@ -17,8 +17,8 @@ public class Decoder {
     }
 
     public Character getDecodedBit(ArrayList<Character> twoBitList) {
-        int upperBit = -1;
-        int lowerBit = -1;
+        int upperBit = -1; // initial values of these don't matter because we get this bit from the channel
+        int lowerBit = -1; // we get this bit by calculating the upper chain
         int returningBit;
         try {
             upperChain.add((int) twoBitList.get(0));

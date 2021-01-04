@@ -63,7 +63,6 @@ public final class Utils {
     }
 
     public static void byteArrayToImage(byte[] data, String imageName) throws IOException {
-        System.out.println("Data length: " + data.length + " bytes.");
         ByteArrayInputStream bis = new ByteArrayInputStream(data);
         BufferedImage bImage2 = ImageIO.read(bis);
         ImageIO.write(bImage2, "bmp", new File(imageName.substring(0, imageName.length() - 4) + ".bmp"));

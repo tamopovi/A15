@@ -9,6 +9,10 @@ import static com.VU.Utils.*;
 public class Channel {
     private float errorProbability;
 
+    public Channel() {
+        this.errorProbability = 0;
+    }
+
     public Channel(float errorProbability) {
         this.errorProbability = errorProbability;
     }
@@ -109,7 +113,7 @@ public class Channel {
         }
     }
 
-    public void sendOriginalImage(CodeString codeString){
+    public void sendOriginalImage(CodeString codeString) {
         try {
             // send the message through the channel
             if (codeString.getRawString() == null) {
@@ -144,7 +148,7 @@ public class Channel {
                 }
                 codeString.setReceivedString(charArrayListToString(outputMessageVector));
                 System.out.println("Comparing received message to original message...");
-                printDiff(codeString.getReceivedString(),codeString.getRawString());
+                printDiff(codeString.getReceivedString(), codeString.getRawString());
                 System.out.println(MSG_SUCCESS);
                 System.out.println("Message received through the channel. Check received-{originalFileName} file.");
             }

@@ -154,6 +154,16 @@ public class Main {
                         }
                     break;
                 }
+                case "testvector": {
+                    if (params.length == 0) {
+                        System.out.println(ANSI_RED + "Provide a channel error probability for running vector experiments." + ANSI_RESET);
+                        break;
+                    }
+                    float errorProbability = readProbability(params[0]);
+                    ExperimentRunner er = new ExperimentRunner(errorProbability);
+                    er.runVectorTests(errorProbability);
+                    break;
+                }
                 default: {
                     commandNotFound(inputLine);
                     break;
