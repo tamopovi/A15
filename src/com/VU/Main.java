@@ -154,7 +154,7 @@ public class Main {
                         }
                     break;
                 }
-                case "testvector": {
+                case CMD_TEST_VECTOR: {
                     if (params.length == 0) {
                         System.out.println(ANSI_RED + "Provide a channel error probability for running vector experiments." + ANSI_RESET);
                         break;
@@ -162,6 +162,16 @@ public class Main {
                     float errorProbability = readProbability(params[0]);
                     ExperimentRunner er = new ExperimentRunner(errorProbability);
                     er.runVectorTests(errorProbability);
+                    break;
+                }
+                case CMD_TEST_STRING: {
+                    if (params.length == 0) {
+                        System.out.println(ANSI_RED + "Provide a channel error probability for running text experiments." + ANSI_RESET);
+                        break;
+                    }
+                    float errorProbability = readProbability(params[0]);
+                    ExperimentRunner er = new ExperimentRunner(errorProbability);
+                    er.runTextTests(errorProbability);
                     break;
                 }
                 default: {

@@ -1,6 +1,7 @@
 package com.VU;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.stream.IntStream;
 
 import static com.VU.Utils.printDiff;
@@ -54,7 +55,35 @@ public class ExperimentRunner {
         System.out.printf("%.4f", (double) (incorrectBitCount / totalBitCount) * 100);
         System.out.println("%.");
         System.out.println("Message with the lowest amount of errors had " + lowestDifference + " errors.");
+    }
 
+    public void runTextTests(float errorProbability) {
+        channel.setErrorProbability(errorProbability);
 
+        // generate test strings:
+        String fullString = "Harry Potter is a series of seven fantasy novels written by British author J. K. Rowling.";
+
+        ArrayList<String> testStrings = new ArrayList<>();
+        testStrings.add(new String("Harry"));
+        testStrings.add(("Harry Potter"));
+        testStrings.add(("Harry Potter is"));
+        testStrings.add(("Harry Potter is a"));
+        testStrings.add(("Harry Potter is a series"));
+        testStrings.add(("Harry Potter is a series of"));
+        testStrings.add(("Harry Potter is a series of seven"));
+        testStrings.add(("Harry Potter is a series of seven fantasy "));
+        testStrings.add(("Harry Potter is a series of seven fantasy novels"));
+        testStrings.add(("Harry Potter is a series of seven fantasy novels written "));
+        testStrings.add(("Harry Potter is a series of seven fantasy novels written by "));
+        testStrings.add(("Harry Potter is a series of seven fantasy novels written by British "));
+        testStrings.add(("Harry Potter is a series of seven fantasy novels written by British author "));
+        testStrings.add(("Harry Potter is a series of seven fantasy novels written by British author J."));
+        testStrings.add(("Harry Potter is a series of seven fantasy novels written by British author J. K."));
+        testStrings.add("Harry Potter is a series of seven fantasy novels written by British author J. K. Rowling.");
+        for (String s : testStrings) {
+            codeString.encode(s);
+            channel.sendMessage(codeString);
+            codeString.decode();
+        }
     }
 }

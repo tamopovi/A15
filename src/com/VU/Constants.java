@@ -27,6 +27,8 @@ public final class Constants {
     public static final String CMD_SENDIMG = "sendimg";
     public static final String CMD_SEND_ORIGINAL = "sendoriginal";
     public static final String CMD_STATE = "state";
+    public static final String CMD_TEST_VECTOR = "testvector";
+    public static final String CMD_TEST_STRING = "teststring";
 
 
     // errors
