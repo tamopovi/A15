@@ -14,13 +14,6 @@ import static com.VU.Utils.countOccurences;
 import static com.VU.Utils.*;
 
 public class Main {
-
-
-    public static void commandNotFound(String inputStr) {
-        System.out.println(ANSI_RED + "Command \"" + inputStr + "\" was not found." + ANSI_RESET);
-    }
-
-
     public static void main(String[] args) {
         printGreeting();
         Scanner scanner = new Scanner(System.in);
@@ -36,6 +29,7 @@ public class Main {
 
             switch (command.toLowerCase()) {
                 case CMD_CHANGE_ERROR_PROB: {
+                    // set channel error probability
                     if (params.length == 0) {
                         System.out.println(ERROR_NO_ARGUMENTS_FOR_CEP);
                         break;
@@ -45,6 +39,7 @@ public class Main {
                 }
 
                 case CMD_PROBABILITY: {
+                    // print current channel error probability
                     channel.printCurrentErrorProbability();
                     break;
                 }
@@ -57,6 +52,7 @@ public class Main {
                     break;
                 }
                 case CMD_ENCODE: {
+                    // encode message by writing encode "inputMessageHere"
                     if (params.length == 0) {
                         codeString.encode(codeString.getRawString());
                     } else {
@@ -77,11 +73,13 @@ public class Main {
                     break;
                 }
                 case CMD_STATE: {
+                    // prints current codesString state: original string, encoded, decoded...
                     channel.printCurrentErrorProbability();
                     codeString.printCurrentState();
                     break;
                 }
                 case CMD_INPUT: {
+                    // sets the original input of the message
                     Pattern p = Pattern.compile("\"([^\"]*)\"");
                     Matcher m = p.matcher(inputLine);
                     while (m.find()) {
@@ -90,14 +88,17 @@ public class Main {
                     break;
                 }
                 case CMD_SEND: {
+                    // send the encoded message through the channel
                     channel.sendMessage(codeString);
                     break;
                 }
                 case CMD_EDIT: {
+                    // edit received codeString
                     codeString.editReceivedString();
                     break;
                 }
                 case CMD_SEND_ORIGINAL: {
+                    // send image through channel without encoding/decoding
                     System.out.println("Enter the path to the input BMP picture. The format is 'C:/.../picture.bmp'");
                     String fileName = scanner.next();
                     if (fileName != null)
@@ -118,6 +119,7 @@ public class Main {
                     break;
                 }
                 case CMD_SENDIMG: {
+                    // send image through channel with encoding/decoding
                     System.out.println("Enter the path to the input BMP picture. The format is 'C:/.../picture.bmp'");
                     String fileName = scanner.next();
                     if (fileName != null)
@@ -215,4 +217,9 @@ public class Main {
         System.out.println("Default channel error probability is: " + ANSI_GREEN + DEFAULT_ERROR_PROBABILITY + ANSI_RESET + ".");
         System.out.println("Get help by using the " + ANSI_CYAN + CMD_HELP + ANSI_RESET + " command.");
     }
+
+    public static void commandNotFound(String inputStr) {
+        System.out.println(ANSI_RED + "Command \"" + inputStr + "\" was not found." + ANSI_RESET);
+    }
+
 }

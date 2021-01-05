@@ -72,7 +72,7 @@ public class Channel {
 
     public void sendEncodedImage(CodeString codeString) {
         try {
-            // send the message through the channel
+            // send an encoded image through the channel
             if (codeString.getEncodedString() == null) {
                 throw (new Exception(ERROR_SENDING_NULL));
             } else {
@@ -88,7 +88,7 @@ public class Channel {
                 ArrayList<Character> outputMessageVector = new ArrayList<>();
                 for (int i = 0; i < inputMessageVector.size(); i++) {
                     char el = inputMessageVector.get(i);
-                    if (i < bmpHeaderBitSize)
+                    if (i < bmpHeaderBitSize * 2) // an encoded message is two times longer than the original
                         outputMessageVector.add(inputMessageVector.get(i));
                     else if (getRandomFloatInRange(0, 1) <= errorProbability) {
                         // create an error
@@ -115,7 +115,7 @@ public class Channel {
 
     public void sendOriginalImage(CodeString codeString) {
         try {
-            // send the message through the channel
+            // send the original image through the channel
             if (codeString.getRawString() == null) {
                 throw (new Exception(ERROR_SENDING_NULL));
             } else {
