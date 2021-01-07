@@ -60,8 +60,8 @@ public class CodeString {
         try {
             // do some stuff with inputString
             setRawString(inputString);
-            if (countOccurences(inputString, '0') +
-                    countOccurences(inputString, '1') == inputString.length()) {
+            if (countOccurrences(inputString, '0') +
+                    countOccurrences(inputString, '1') == inputString.length()) {
                 encodeBinaryVector(inputString + "000000");
             } else {
                 String inputBits = convertStringToBinary(rawString) + "000000";
@@ -91,8 +91,8 @@ public class CodeString {
         receivedString = null;
         try {
             // do some stuff with inputString
-            if (countOccurences(inputString, '0') +
-                    countOccurences(inputString, '1') == inputString.length()) {
+            if (countOccurrences(inputString, '0') +
+                    countOccurrences(inputString, '1') == inputString.length()) {
                 encodeBinaryVector(inputString + "000000");
             } else {
                 String inputBits = convertStringToBinary(rawString) + "000000";
@@ -129,8 +129,8 @@ public class CodeString {
                     receivedCharArray.remove(0);
                     receivedCharArray.remove(0);
                 }
-                if (countOccurences(rawString, '0') +
-                        countOccurences(rawString, '1') == rawString.length()) {
+                if (countOccurrences(rawString, '0') +
+                        countOccurrences(rawString, '1') == rawString.length()) {
                     setDecodedString(decodedMessage.substring(6));
 
                 } else
@@ -143,7 +143,7 @@ public class CodeString {
                 System.out.println(ANSI_RED + e.getMessage() + ANSI_RESET);
             }
         }
-        System.out.println("Comparing decoded message to the original message...");
+        System.out.println(MSG_COMPARING_DECODED_TO_ORIGINAL);
         printDiff(getDecodedString(),getRawString());
     }
 
@@ -163,6 +163,7 @@ public class CodeString {
         }
     }
 
+    // edit received message
     public void editReceivedString() {
         if (receivedString == null) {
             System.out.println(ERROR_EDIT_EMPTY);

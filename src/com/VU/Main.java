@@ -10,7 +10,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.VU.Constants.*;
-import static com.VU.Utils.countOccurences;
+import static com.VU.Utils.countOccurrences;
 import static com.VU.Utils.*;
 
 public class Main {
@@ -56,7 +56,7 @@ public class Main {
                     if (params.length == 0) {
                         codeString.encode(codeString.getRawString());
                     } else {
-                        if (countOccurences(inputLine, '"') % 2 == 0) {
+                        if (countOccurrences(inputLine, '"') % 2 == 0) {
                             Pattern p = Pattern.compile("\"([^\"]*)\"");
                             Matcher m = p.matcher(inputLine);
                             while (m.find()) {
@@ -147,6 +147,7 @@ public class Main {
                     break;
                 }
                 case CMD_TEST_VECTOR: {
+                    // command for testing a vector of 0s and 1s
                     if (params.length == 0) {
                         System.out.println(ANSI_RED + "Provide a channel error probability for running vector experiments." + ANSI_RESET);
                         break;
@@ -157,6 +158,7 @@ public class Main {
                     break;
                 }
                 case CMD_TEST_STRING: {
+                    // command for testing a text string
                     if (params.length == 0) {
                         System.out.println(ANSI_RED + "Provide a channel error probability for running text experiments." + ANSI_RESET);
                         break;
@@ -178,16 +180,6 @@ public class Main {
 
         }
         while (!inputLine.equalsIgnoreCase("exit") && !inputLine.equalsIgnoreCase("quit"));
-    }
-
-    public static float readProbability(String inputStr) {
-        float probability;
-        inputStr = inputStr.replaceAll(",", ".");
-        probability = Float.valueOf(inputStr);
-        if (!((probability >= 0) && (probability <= 1))) {
-            System.out.println(ANSI_RED + ERROR_RANGE + ANSI_RESET);
-        }
-        return probability;
     }
 
     public static void printHelp() {

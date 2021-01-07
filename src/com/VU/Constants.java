@@ -46,4 +46,8 @@ public final class Constants {
     public static final String MSG_ENCODING_FAILED = ANSI_RED + "Encoding failed." + ANSI_RESET;
     public static final String MSG_FAILED_CHANNEL_TRANSFER = ANSI_RED + "Message transfer through the channel was unsuccessful." + ANSI_RESET;
     public static final String MSG_EDIT_EMPTY = ANSI_RED + "First encode a message, then send it through the channel." + ANSI_RESET;
+    public static final String MSG_COMPARING_RECEIVED_TO_ORIGINAL = "Comparing received message to original message...";
+    public static final String MSG_CHECK_RECEIVED_BMP = "Message received through the channel. Check received-message.bmp file.";
+    public static final String MSG_MESSAGE_RECEIVED = "Message received through the channel.";
+    public static final String MSG_COMPARING_DECODED_TO_ORIGINAL = "Comparing decoded message to the original message...";
 }

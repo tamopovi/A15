@@ -10,13 +10,25 @@ import java.util.Arrays;
 import java.util.Random;
 import java.util.stream.IntStream;
 
-import static com.VU.Constants.ANSI_GREEN;
-import static com.VU.Constants.ANSI_RESET;
+import static com.VU.Constants.*;
+import static com.VU.Constants.ERROR_RANGE;
 
 public final class Utils {
-    public static long countOccurences(String someString, char searchedChar) {
-        long count = someString.chars().filter(ch -> ch == searchedChar).count();
-        return count;
+
+    // get a float value for a probability from a String with format "x.y" or "x,y"
+    public static float readProbability(String inputStr) {
+        float probability;
+        inputStr = inputStr.replaceAll(",", ".");
+        probability = Float.valueOf(inputStr);
+        if (!((probability >= 0) && (probability <= 1))) {
+            System.out.println(ANSI_RED + ERROR_RANGE + ANSI_RESET);
+        }
+        return probability;
+    }
+
+    // count occurrences of a char in a String
+    public static long countOccurrences(String someString, char searchedChar) {
+        return someString.chars().filter(ch -> ch == searchedChar).count();
     }
 
     public static float getRandomFloatInRange(int min, int max) {
@@ -37,6 +49,7 @@ public final class Utils {
         return (char) r.nextInt(10000);
     }
 
+    // convert String of text into a String of binary
     public static String convertStringToBinary(String input) {
         StringBuilder result = new StringBuilder();
         char[] chars = input.toCharArray();
@@ -49,6 +62,7 @@ public final class Utils {
         return result.toString();
     }
 
+    // get text String from a binary string containing text data
     public static String getTextFromBinary(String input) {
         StringBuilder sb = new StringBuilder(); // Some place to store the chars
 
@@ -58,8 +72,7 @@ public final class Utils {
                 sb.append((char) Integer.parseInt(s, 2)) // ...and turn it into an int and then to a char
         );
 
-        String output = sb.toString(); // Output text (t)
-        return output;
+        return sb.toString();
     }
 
     public static void byteArrayToImage(byte[] data, String imageName) throws IOException {
@@ -88,6 +101,7 @@ public final class Utils {
         return resultByteArr;
     }
 
+    // print the differences between one String and another
     public static void printDiff(String str1, String str2) {
 
         int diffCount = (int) IntStream.range(0, str1.length())

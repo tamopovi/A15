@@ -105,7 +105,7 @@ public class Channel {
                 }
                 System.out.println(MSG_SUCCESS);
                 codeString.setReceivedString(charArrayListToString(outputMessageVector));
-                System.out.println("Message received through the channel.");
+                System.out.println(MSG_MESSAGE_RECEIVED);
             }
         } catch (Exception e) {
             System.out.println(MSG_FAILED_CHANNEL_TRANSFER);
@@ -147,10 +147,10 @@ public class Channel {
                     }
                 }
                 codeString.setReceivedString(charArrayListToString(outputMessageVector));
-                System.out.println("Comparing received message to original message...");
+                System.out.println(MSG_COMPARING_RECEIVED_TO_ORIGINAL);
                 printDiff(codeString.getReceivedString(), codeString.getRawString());
                 System.out.println(MSG_SUCCESS);
-                System.out.println("Message received through the channel. Check received-message.bmp file.");
+                System.out.println(MSG_CHECK_RECEIVED_BMP);
             }
         } catch (Exception e) {
             System.out.println(MSG_FAILED_CHANNEL_TRANSFER);
