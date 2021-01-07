@@ -24,9 +24,9 @@ public class Decoder {
             upperChain.add((int) twoBitList.get(0));
             if (upperChain.size() > 6) {
                 upperBit = upperChain.get(0);
-                upperChain.remove(0);
                 lowerBit = upperChain.get(0) + upperChain.get(1) + upperChain.get(4) +
                         (int) twoBitList.get(0) + (int) twoBitList.get(1);
+                upperChain.remove(0);
                 MDE.add(lowerBit);
                 lowerChain.add(lowerBit);
                 if (lowerChain.size() > 6) {
@@ -37,6 +37,7 @@ public class Decoder {
                         lowerBit = getMDEResult();
                         MDE.clear();
                     }
+                    lowerChain.remove(0);
                 }
             }
             returningBit = upperBit + lowerBit;
