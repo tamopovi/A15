@@ -30,40 +30,66 @@ public class Channel {
 
     public void sendMessage(CodeString codeString) {
         try {
-            // send the message through the channel
-            if (codeString.getEncodedString() == null) {
-                throw (new Exception(ERROR_SENDING_NULL));
-            } else {
-                System.out.println("Sending \"" + ANSI_YELLOW + codeString.getEncodedString() + ANSI_RESET +
-                        "\" through the channel... (Error probability: " + ANSI_GREEN + getErrorProbability()
-                        + ANSI_RESET + ")");
-                ArrayList<Character> inputMessageVector = new ArrayList<>(
-                        codeString.getEncodedString().chars()
-                                .mapToObj(e -> (char) e)
-                                .collect(
-                                        Collectors.toList()
-                                )
-                );
-                ArrayList<Character> outputMessageVector = (ArrayList<Character>) inputMessageVector.stream().map(el -> {
-                    if (getRandomFloatInRange(0, 1) <= errorProbability) {
-                        // create an error
-                        if (el == '0') {
-                            return '1';
-                        }
-                        if (el == '1') {
-                            return '0';
-                        }
-                        return generateRandomUnicodeChar();
-                    } else {
-                        // pass without an error
-                        return el;
+            System.out.println("Sending original message\"" + ANSI_YELLOW + codeString.getRawString() + ANSI_RESET +
+                    "\" through the channel... (Error probability: " + ANSI_GREEN + getErrorProbability()
+                    + ANSI_RESET + ")");
+            ArrayList<Character> rawInputMessageVector = new ArrayList<>(
+                    codeString.getRawString().chars()
+                            .mapToObj(e -> (char) e)
+                            .collect(
+                                    Collectors.toList()
+                            )
+            );
+            ArrayList<Character> rawOutputMessageVector = (ArrayList<Character>) rawInputMessageVector.stream().map(el -> {
+                if (getRandomFloatInRange(0, 1) <= errorProbability) {
+                    // create an error
+                    if (el == '0') {
+                        return '1';
                     }
-                }).collect(Collectors.toList());
-                System.out.println(MSG_SUCCESS);
-                codeString.setReceivedString(charArrayListToString(outputMessageVector));
-                System.out.println("Message received through the channel: \"" + ANSI_YELLOW + codeString.getReceivedString() + ANSI_RESET + "\".");
-                codeString.printErrorPositions();
-            }
+                    if (el == '1') {
+                        return '0';
+                    }
+                    return generateRandomUnicodeChar();
+                } else {
+                    // pass without an error
+                    return el;
+                }
+            }).collect(Collectors.toList());
+
+            System.out.println("Received: \"" + ANSI_YELLOW + charArrayListToString(rawOutputMessageVector) + ANSI_RESET + "\" message from the channel");
+
+
+            // send the message through the channel
+            System.out.println("Sending encoded message \"" + ANSI_YELLOW + codeString.getEncodedString() + ANSI_RESET +
+                    "\" through the channel... (Error probability: " + ANSI_GREEN + getErrorProbability()
+                    + ANSI_RESET + ")");
+            ArrayList<Character> inputMessageVector = new ArrayList<>(
+                    codeString.getEncodedString().chars()
+                            .mapToObj(e -> (char) e)
+                            .collect(
+                                    Collectors.toList()
+                            )
+            );
+            ArrayList<Character> outputMessageVector = (ArrayList<Character>) inputMessageVector.stream().map(el -> {
+                if (getRandomFloatInRange(0, 1) <= errorProbability) {
+                    // create an error
+                    if (el == '0') {
+                        return '1';
+                    }
+                    if (el == '1') {
+                        return '0';
+                    }
+                    return generateRandomUnicodeChar();
+                } else {
+                    // pass without an error
+                    return el;
+                }
+            }).collect(Collectors.toList());
+            System.out.println(MSG_SUCCESS);
+            codeString.setReceivedString(charArrayListToString(outputMessageVector));
+            System.out.println("Encoded message received through the channel: \"" + ANSI_YELLOW + codeString.getReceivedString() + ANSI_RESET + "\".");
+            codeString.printErrorPositions();
+
         } catch (Exception e) {
             System.out.println(MSG_FAILED_CHANNEL_TRANSFER);
             System.out.println(ANSI_RED + e.getMessage() + ANSI_RESET);
